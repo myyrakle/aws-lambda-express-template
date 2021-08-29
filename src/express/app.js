@@ -3,12 +3,28 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-//const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+const compression = require("compression");
+const cors = require("cors");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 
 const app = express();
+
+const { getCurrentInvoke } = require("@vendia/serverless-express");
+
+app.use(compression());
+app.use(cors());
+// app.use((req, res, next) => {
+//     const currentInvoke = getCurrentInvoke();
+//     const { event = {} } = currentInvoke;
+//     const { requestContext = {}, multiValueHeaders = {} } = event;
+//     const { stage = "" } = requestContext;
+//     //const { Host = ["localhost:3000"] } = multiValueHeaders;
+//     const apiUrl = `https://${Host[0]}/${stage}`;
+
+//     next();
+// });
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -54,17 +70,17 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 // /**
 //  * Listen on provided port, on all network interfaces.
 //  */
 
-server.listen(port, () => {
-    console.log("## 서버 시작");
-});
-server.on("error", onError);
-server.on("listening", onListening);
+// server.listen(port, () => {
+//     console.log("## 서버 시작");
+// });
+// server.on("error", onError);
+// server.on("listening", onListening);
 
 // /**
 //  * Normalize a port into a number, string, or false.
