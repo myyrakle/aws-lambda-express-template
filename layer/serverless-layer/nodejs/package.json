@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@vendia/serverless-express": "4.3.9"
+    "aws-serverless-express": "^3.4.0"
   }
 }

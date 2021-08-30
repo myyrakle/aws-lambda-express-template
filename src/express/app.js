@@ -11,20 +11,8 @@ const usersRouter = require("./routes/users");
 
 const app = express();
 
-const { getCurrentInvoke } = require("@vendia/serverless-express");
-
 app.use(compression());
 app.use(cors());
-// app.use((req, res, next) => {
-//     const currentInvoke = getCurrentInvoke();
-//     const { event = {} } = currentInvoke;
-//     const { requestContext = {}, multiValueHeaders = {} } = event;
-//     const { stage = "" } = requestContext;
-//     //const { Host = ["localhost:3000"] } = multiValueHeaders;
-//     const apiUrl = `https://${Host[0]}/${stage}`;
-
-//     next();
-// });
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -36,6 +24,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 //app.use(awsServerlessExpressMiddleware.eventContext());
+
+const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+app.use(awsServerlessExpressMiddleware.eventContext());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

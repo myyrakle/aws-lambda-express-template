@@ -31,7 +31,28 @@ Express를 AWS Lambda로 사용하기 위한 가이드 및 템플릿입니다.
 
 ### 1. Express 소스 연동
 
--   Express 소스 연동은 어려울 것이 없다. 기존의 프로젝트 디렉토리를 express 디렉토리에 위치시키면 된다. 그리고 index.js 핸들러 소스에서 export한 서버 객체를 받아 사용한다.
+Express 소스 연동은 어려울 것이 없다. 기존의 프로젝트 디렉토리를 express 디렉토리에 위치시키고, 다음과 같이 뒷부분에 미들웨어를 등록해준다.
+
+```
+const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+app.use(awsServerlessExpressMiddleware.eventContext());
+```
+
+그리고 express에서 생성한 express 객체를 index 핸들러에서 가져다쓸 수 있도록 경로를 확인해준다.
+
+```
+const serverlessExpress = require("aws-serverless-express");
+
+const app = require("./express/app"); // 이 경로가 맞는지. 서버 객체를 export하고 있는지.
+
+const server = serverlessExpress.createServer(app);
+
+exports.handler = (event, context, callback) => {
+    console.log(`EVENT: ${JSON.stringify(event)}`);
+    serverlessExpress.proxy(server, event, context);
+};
+
+```
 
 ### 2. 로컬 서버 실행
 
