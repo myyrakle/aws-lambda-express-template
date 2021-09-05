@@ -106,3 +106,16 @@ aws configure
 
 -   모듈은 가급적 node_modules를 직접 올리지 않고, Layer로 업로드해 연동하는 방식을 취한다.
 -   Layer는 node_modules가 포함된 파일을 압축률 없이 압축해 업로드하면 된다.
+-   Layer로 모듈을 올릴 경우 배포 파일을 열어 압축 명령에 node_module를 무시하게 수정한다.
+
+```
+# Windows
+tar.exe -a -c -f deploy.zip src/express src/index.js --exclude ./src/express/node_modules
+```
+
+```
+# Linux or Mac
+zip deploy.zip -r src/express src/index.js --exclude=./src/express/node_modules
+```
+
+-   Layer를 관리하기가 번거롭고 모듈의 크기가 크지 않다면 그냥 올려도 되긴 한다.
